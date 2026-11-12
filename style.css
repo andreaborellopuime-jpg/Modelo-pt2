@@ -1,0 +1,255 @@
+:root {
+  --azul: #3b566e;
+  --arena: #c4a68a;
+  --fondo-top: #a9b6c4;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  background: linear-gradient(to bottom, var(--fondo-top), #f6f8fa 85%);
+  background-attachment: fixed;
+  min-height: 100vh;
+  color: #fff;
+}
+
+/* ---------- PORTADA ---------- */
+.hero {
+  position: relative;
+  min-height: 70vh;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* fondo: tu imagen (foto de la escuela con capa azul y puntitos) */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: url("img/fondo.jpg") center / cover no-repeat;
+}
+
+/* círculo: aro azul grisáceo + círculo blanco + logo */
+.hero-logo {
+  position: relative;
+  z-index: 2;
+  width: clamp(240px, 40vw, 440px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--azul);
+  display: grid;
+  place-items: center;
+}
+.hero-logo-inner {
+  width: 88%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #fff;
+  display: grid;
+  place-items: center;
+}
+.hero-logo-inner img {
+  max-width: 58%;
+  max-height: 70%;
+  object-fit: contain;
+}
+
+/* ---------- TARJETAS ---------- */
+.contenido {
+  padding: 3rem 1rem 4rem;
+}
+
+.cards {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: clamp(1rem, 4vw, 3rem);
+  flex-wrap: wrap;
+}
+
+.card {
+  width: 230px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.card-top,
+.card-icon {
+  background: var(--azul);
+}
+
+/* parte superior: semicírculo blanco (lugar para una imagen) */
+.card-top {
+  height: 150px;
+  border-radius: 8px 8px 0 0;
+  border: 3px solid var(--azul);
+  border-bottom: 0;
+  position: relative;
+  overflow: hidden;
+}
+.card-top::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  border-radius: 0 0 50% 50% / 0 0 100% 100%;
+}
+
+.card-icon {
+  height: 270px;
+  display: grid;
+  place-items: center;
+  border-radius: 0 0 8px 8px;
+}
+.card-icon svg { width: 90px; height: 90px; }
+
+/* pie de la tarjeta con flecha */
+.card-arrow {
+  height: 80px;
+  border: 0;
+  cursor: pointer;
+  background: linear-gradient(to bottom, #d6dce3, #b3bfcb);
+  border-radius: 0 0 50% 50% / 0 0 100% 100%;
+  margin: 0 3px;
+  display: grid;
+  place-items: center;
+}
+.card-arrow svg {
+  width: 48px;
+  fill: none;
+  stroke: var(--azul);
+  stroke-width: 7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform .4s ease;
+}
+.card-arrow[aria-expanded="true"] svg { transform: rotate(180deg); }
+.card-arrow:hover svg { stroke: #2a3f52; }
+.card-arrow:focus-visible { outline: 3px solid var(--arena); outline-offset: 2px; }
+
+/* ---------- PANELES (todo el ancho, debajo de las tarjetas) ---------- */
+.paneles {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows .45s ease, margin-top .45s ease;
+}
+.panel.abierto {
+  grid-template-rows: 1fr;
+  margin-top: 2rem;
+}
+
+.panel-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.panel-layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  background: var(--azul);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+/* menú lateral */
+.panel-menu {
+  display: flex;
+  flex-direction: column;
+  background: #4b6680;
+}
+.opcion {
+  flex: 1;
+  min-height: 72px;
+  padding: 0 1.2rem;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  font: inherit;
+  font-size: 1.05rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background .25s;
+}
+.opcion:hover { background: #587490; }
+.opcion.activa { background: #66819a; }
+.opcion:focus-visible { outline: 3px solid var(--arena); outline-offset: -3px; }
+
+/* contenido */
+.panel-vistas { padding: 2rem; }
+.vista { display: none; flex-direction: column; gap: 1.5rem; }
+.vista.activa { display: flex; }
+
+.item {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  min-height: 296px;
+}
+.item-img {
+  background: #fff;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.item-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.item-texto {
+  background: #66819a;
+  margin-block: 12px;
+  padding: 1.5rem;
+}
+.item-texto h3 { color: #fff; font-size: 1.4rem; margin-bottom: .6rem; }
+.item-texto p  { line-height: 1.6; }
+
+/* ---------- ANUNCIOS ---------- */
+.anuncios {
+  max-width: 1200px;
+  margin: 3rem auto 0;
+  text-align: center;
+}
+.anuncios h2 { color: var(--azul); margin-bottom: 1rem; }
+.anuncios-slides {
+  position: relative;
+  min-height: 150px;
+  background: var(--azul);
+  border-radius: 14px;
+}
+.anuncio {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1.5rem 2rem;
+  opacity: 0;
+  transition: opacity .6s ease;
+  pointer-events: none;
+}
+.anuncio.activo { opacity: 1; pointer-events: auto; }
+.anuncio h3 { color: var(--arena); margin-bottom: .5rem; font-size: 1.4rem; }
+.anuncios-puntos { display: flex; justify-content: center; gap: .6rem; margin-top: 1rem; }
+.anuncios-puntos button {
+  width: 12px; height: 12px;
+  border: 0; border-radius: 50%;
+  background: #b3bfcb;
+  cursor: pointer;
+}
+.anuncios-puntos button.activo { background: var(--azul); }
+
+/* ---------- CELULAR ---------- */
+@media (max-width: 700px) {
+  .panel-layout { grid-template-columns: 1fr; }
+  .panel-menu { flex-direction: row; flex-wrap: wrap; }
+  .opcion { flex: 1 1 auto; min-height: 52px; text-align: center; }
+  .panel-vistas { padding: 1rem; }
+  .item { grid-template-columns: 1fr; }
+  .item-img { height: 220px; }
+  .item-texto { margin-block: 0; }
+}
