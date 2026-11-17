@@ -34,35 +34,35 @@ document.querySelectorAll('.panel').forEach(panel => {
   });
 });
 
-/* ---- Anuncios automáticos ---- */
-const anuncios = document.querySelectorAll('.anuncio');
-const contenedorPuntos = document.querySelector('.anuncios-puntos');
-const seccionAnuncios = document.querySelector('.anuncios');
-const INTERVALO = 5000; // milisegundos entre anuncios
-let actual = 0;
-let timer = null;
+/* ---- Carruseles automáticos (noticias y anuncios) ---- */
+const INTERVALO = 5000; // milisegundos entre cada cambio
 
-const puntos = [...anuncios].map((_, i) => {
-  const p = document.createElement('button');
-  p.setAttribute('aria-label', 'Ir al anuncio ' + (i + 1));
-  p.addEventListener('click', () => { mostrar(i); reiniciar(); });
-  contenedorPuntos.appendChild(p);
-  return p;
+document.querySelectorAll('[data-carrusel]').forEach(seccion => {
+  const slides = seccion.querySelectorAll('.anuncio');
+  const contenedorPuntos = seccion.querySelector('.anuncios-puntos');
+  let actual = 0;
+  let timer = null;
+
+  const puntos = [...slides].map((_, i) => {
+    const p = document.createElement('button');
+    p.setAttribute('aria-label', 'Ir al elemento ' + (i + 1));
+    p.addEventListener('click', () => { mostrar(i); detener(); iniciar(); });
+    contenedorPuntos.appendChild(p);
+    return p;
+  });
+
+  function mostrar(i) {
+    actual = i;
+    slides.forEach((s, n) => s.classList.toggle('activo', n === i));
+    puntos.forEach((p, n) => p.classList.toggle('activo', n === i));
+  }
+  function iniciar() { if (!timer) timer = setInterval(() => mostrar((actual + 1) % slides.length), INTERVALO); }
+  function detener() { clearInterval(timer); timer = null; }
+
+  mostrar(0);
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    iniciar();
+    seccion.addEventListener('mouseenter', detener);
+    seccion.addEventListener('mouseleave', iniciar);
+  }
 });
-
-function mostrar(i) {
-  actual = i;
-  anuncios.forEach((a, n) => a.classList.toggle('activo', n === i));
-  puntos.forEach((p, n) => p.classList.toggle('activo', n === i));
-}
-function siguiente() { mostrar((actual + 1) % anuncios.length); }
-function iniciar() { if (!timer) timer = setInterval(siguiente, INTERVALO); }
-function detener() { clearInterval(timer); timer = null; }
-function reiniciar() { detener(); iniciar(); }
-
-mostrar(0);
-if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-  iniciar();
-  seccionAnuncios.addEventListener('mouseenter', detener);
-  seccionAnuncios.addEventListener('mouseleave', iniciar);
-}
